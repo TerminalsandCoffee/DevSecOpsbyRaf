@@ -1,36 +1,42 @@
 #!/bin/bash
 
-# Update the system and install required utilities
-sudo yum install yum-utils epel-release -y
+# Step 1: Update your system
+echo "Updating system..."
+sudo yum update -y
 
-# Install Java and wget
-sudo yum install java wget -y
+# Step 2: Install yum-utils package
+echo "Installing yum-utils package..."
+sudo yum install -y yum-utils
 
-# Add Jenkins repository and import its key
-sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo --no-check-certificate
-sudo rpm --import http://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
-
-# Install Jenkins
-sudo yum install jenkins -y
-
-# Add Docker repository and install Docker packages
+# Step 3: Add Docker’s official repository
+echo "Adding Docker official repository..."
 sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-sudo yum install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin --allowerasing
 
-# Install Maven
-sudo yum install maven -y
+# Step 4: Install Docker CE, CLI, and containerd
+echo "Installing Docker CE, CLI, and containerd..."
+sudo yum install -y docker-ce docker-ce-cli containerd.io
 
-# Enable and start Jenkins and Docker services
-sudo systemctl enable jenkins
-sudo systemctl start jenkins
+# Step 5: Download Docker Compose
+echo "Downloading Docker Compose..."
+sudo curl -L "https://github.com/docker/compose/releases/download/v2.3.3/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 
+# Step 6: Apply executable permissions to Docker Compose
+echo "Applying executable permissions to Docker Compose..."
+sudo chmod +x /usr/local/bin/docker-compose
+
+# Step 7: Verify Docker Compose installation
+echo "Verifying Docker Compose installation..."
+docker-compose --version
+
+# Step 8: Enable and start Docker service
+echo "Enabling Docker service..."
 sudo systemctl enable docker
+
+echo "Starting Docker service..."
 sudo systemctl start docker
 
-# Verify installations
-echo "Installed versions:"
-java -version
-wget --version
-jenkins --version
-docker --version
-mvn -version
+# Step 9: Verify Docker service is running
+echo "Checking Docker service status..."
+sudo systemctl status docker
+
+echo "Docker CE and Docker Compose have been installed successfully!"
