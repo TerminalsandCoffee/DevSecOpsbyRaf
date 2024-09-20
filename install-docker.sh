@@ -31,4 +31,4 @@ docker-compose --version
 # Step 8: Enable and start Docker service
 echo "Enabling and starting Docker service..."
 sudo systemctl enable docker
-sudo system
+sudo systemctl status docker
